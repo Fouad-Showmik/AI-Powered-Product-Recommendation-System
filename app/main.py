@@ -1,8 +1,10 @@
 import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.config import get_settings
 from app.embeddings import Embedder, EmbeddingError
@@ -44,3 +46,5 @@ async def embedding_error_handler(_: Request, exc: EmbeddingError):
     return JSONResponse(
         status_code=502, content={"detail": "Embedding provider unavailable"}
     )
+
+app.mount("/", StaticFiles(directory=Path(__file__).parent / "static", html=True))
