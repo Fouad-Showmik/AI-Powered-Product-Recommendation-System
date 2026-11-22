@@ -4,3 +4,4 @@ numpy
 httpx
 pydantic
 pydantic-settings
+cloudinary
