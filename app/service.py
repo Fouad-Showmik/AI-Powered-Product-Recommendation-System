@@ -59,7 +59,7 @@ class RecommendationService:
         if row is None:
             return None
         top_k = top_k or self.s.default_top_k
-        threshold = self.s.default_threshold if threshold is None else threshold
+        threshold = self.s.default_similar_threshold if threshold is None else threshold
 
         combined, name_s, desc_s, rating_s = self.index.score_product(
             row, self.s.weight_name, self.s.weight_description, self.s.weight_rating, self.s.weight_catagory

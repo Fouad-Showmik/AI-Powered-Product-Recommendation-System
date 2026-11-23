@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     weight_description: float
     weight_rating: float
     weight_catagory: float
+    default_similar_threshold: float
 
     default_top_k: int
     default_threshold: float
