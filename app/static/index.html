@@ -3,20 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="description" content="Find the right product with recommendations tailored to what you need.">
   <title>Product Finder</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="#/">Product Finder</a>
+    <a class="brand" href="#/" aria-label="Product Finder home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none">
+          <path d="M7 9.5h18l-2 15H9l-2-15Z" fill="currentColor" opacity=".14"/>
+          <path d="M7 9.5h18l-2 15H9l-2-15ZM12 12V8a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="m13.5 17 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="brand-copy">
+        <span class="brand-name">Product Finder</span>
+        <span class="brand-caption">Thoughtful picks, made simple</span>
+      </span>
+    </a>
     <form id="search-form" class="search" role="search">
+      <label class="sr-only" for="search-input">Search products</label>
       <input id="search-input" type="search" maxlength="500" autocomplete="off"
-             placeholder="Try “noise cancelling headphones for travel”" aria-label="Search products">
-      <button type="submit">Search</button>
+             placeholder="What are you looking for?" aria-label="Search products">
+      <button type="submit">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="8.75" cy="8.75" r="5.75" stroke="currentColor" stroke-width="1.8"/>
+          <path d="m13 13 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <span>Search</span>
+      </button>
     </form>
+    <span class="header-note"><span class="status-dot"></span>AI-powered recommendations</span>
   </header>
 
-  <main id="app" aria-live="polite"></main>
+  <main id="app" aria-live="polite" aria-label="Products and recommendations"></main>
 
   <script src="config.js"></script>
   <script src="app.js"></script>
