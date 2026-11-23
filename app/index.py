@@ -19,6 +19,7 @@ class InMemoryIndex:
         self.desc_m = l2_normalize(desc_vecs)
         self.rating_m = np.stack([encode_rating(p.rating) for p in products])  # shape (N, 5)
         self.ratings = np.array([p.rating for p in products], dtype=np.float32)
+        self.catagories = np.array([p.category or "" for p in products])
 
     def __len__(self):
         return len(self.products)
@@ -34,10 +35,11 @@ class InMemoryIndex:
         return combined, name_s, desc_s
 
     #A tapped product is compared with all products across all three vectors.
-    def score_product(self, row: int, w_name: float, w_desc: float, w_rating: float):
+    def score_product(self, row: int, w_name: float, w_desc: float, w_rating: float, w_cat: float):
         name_s = self.name_m @ self.name_m[row]
         desc_s = self.desc_m @ self.desc_m[row]
         rating_s = self.rating_m @ self.rating_m[row]
-        total = w_name + w_desc + w_rating
-        combined = (w_name * name_s + w_desc * desc_s + w_rating * rating_s) / total
+        cat_s = (self.catagories == self.catagories[row]).astype(np.float32)
+        total = w_name + w_desc + w_rating + w_cat
+        combined = (w_name * name_s + w_desc * desc_s + w_rating * rating_s + w_cat * cat_s) / total
         return combined, name_s, desc_s, rating_s

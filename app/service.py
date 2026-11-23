@@ -62,7 +62,7 @@ class RecommendationService:
         threshold = self.s.default_threshold if threshold is None else threshold
 
         combined, name_s, desc_s, rating_s = self.index.score_product(
-            row, self.s.weight_name, self.s.weight_description, self.s.weight_rating
+            row, self.s.weight_name, self.s.weight_description, self.s.weight_rating, self.s.weight_catagory
         )
         return self._rank("similar", combined, name_s, desc_s, rating_s, row, top_k, threshold, min_rating)
 
