@@ -43,7 +43,7 @@ Every product has three vectors, and similarity between two items is the cosine 
 | Description | product description | embedding API, computed once offline |
 | Rating | the rating number (1 to 5) | small deterministic encoding, computed at startup |
 
-Ratings are encoded with a smooth bucket function instead of a text model, because language models represent numbers like 4.5 and 4.4 poorly. All vectors are scaled to length 1, so cosine similarity becomes a plain dot product, and one matrix multiplication scores the whole catalogue at once.
+Ratings are encoded with a smooth bucket function instead of a text model, because language models represent numbers like 4.5 and 4.4 poorly. All vectors are scaled to length 1, so cosine similarity becomes a plain dot product, and one matrix multiplication scores the whole catalogue at once. Search is an **exact brute-force search**: every query is compared with every product in one matrix multiplication, with no approximate index. It is fast at this size and always returns the true closest products.
 
 ## Architecture
 
@@ -409,7 +409,7 @@ Notes for free hosting:
 
 ## Design decisions and limitations
 
-**Why in-memory instead of a vector database?** For a catalogue of up to roughly 100,000 products, an exact matrix multiplication takes milliseconds and needs no extra infrastructure. Move to pgvector or Qdrant when the catalogue gets much larger, when several server instances must share one index, or when products change constantly. Only `app/index.py` would need to change.
+**Why brute-force search instead of a vector database?** Every query is scored against every product. That is exact, takes milliseconds for tens of thousands of products, and needs no extra infrastructure. The limit is memory: with `text-embedding-3-small`, each product stores two vectors of 1,536 numbers (about 12 KB), so 10,000 products use roughly 120 MB of RAM. Move to a vector database such as pgvector or Qdrant when the catalogue outgrows your server's memory, when several instances must share one index, or when products change constantly. Only `app/index.py` would need to change.
 
 **Why precompute embeddings?** It keeps startup instant and free, avoids repeated API costs on every restart, and works on hosts with temporary filesystems.
 
@@ -419,6 +419,7 @@ Notes for free hosting:
 - No automated tests yet.
 - The catalogue is read at startup, so changes need a rebuild and redeploy.
 - Thresholds depend on the embedding model and catalogue size, and should be re-tuned if either changes.
+- Brute-force search slows down as the catalogue grows, and all vectors must fit in memory. It suits tens of thousands of products, not millions.
 - Categories are broad. For finer recommendations, add a more specific field such as `subcategory` to the data.
 
 ## License
